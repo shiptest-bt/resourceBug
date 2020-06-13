@@ -1,0 +1,36 @@
+resources:
+  - name: test_bash
+    type: GitRepo
+    configuration:
+      gitProvider: test
+      path: shiptest-bt/test 
+      
+pipelines:
+  - name: bash_test
+    steps:
+      - name: Test_pipelines
+        type: Matrix
+        stepMode: Bash
+        configuration:
+          nodePool: u16dynamic
+          inputResources:
+            - name: test_bash
+        stepletMultipliers:
+          environmentVariables:
+            - env1: one
+              env2: two
+              env3: three
+            - env1: changed1
+              env2: changed2
+            - key_1: value1
+              key_2: value2
+          runtimes:
+            - type: image
+              image:
+                auto:
+                  language: java
+                  versions:
+                    - 13      
+        execution:
+          onExecute:
+            - echo "I am on matrix step"
